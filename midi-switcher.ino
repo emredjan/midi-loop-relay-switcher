@@ -14,17 +14,17 @@ const int MOMENTARY_MS = 150;
 
 const int CS_PIN = 10;
 
-const byte LOOP_PINS[NUM_LOOPS] = {2, 3, 4, 5, 6, 7};
-const byte SWITCH_PINS[NUM_SWITCHES] = {8, 9};
+const uint8_t LOOP_PINS[NUM_LOOPS] = {2, 3, 4, 5, 6, 7};
+const uint8_t SWITCH_PINS[NUM_SWITCHES] = {8, 9};
 
-const byte ACTIVATE_LOOP_MIN = 111;
-const byte ACTIVATE_LOOP_MAX = ACTIVATE_LOOP_MIN + NUM_LOOPS - 1;
-const byte BYPASS_LOOP_MIN = 101;
-const byte BYPASS_LOOP_MAX = BYPASS_LOOP_MIN + NUM_LOOPS - 1;
-const byte ACTIVATE_SWITCH_MIN = ACTIVATE_LOOP_MIN + NUM_LOOPS;
-const byte ACTIVATE_SWITCH_MAX = ACTIVATE_SWITCH_MIN + NUM_SWITCHES - 1;
-const byte BYPASS_SWITCH_MIN = BYPASS_LOOP_MIN + NUM_LOOPS;
-const byte BYPASS_SWITCH_MAX = BYPASS_SWITCH_MIN + NUM_SWITCHES - 1;
+const uint8_t ACTIVATE_LOOP_MIN = 111;
+const uint8_t ACTIVATE_LOOP_MAX = ACTIVATE_LOOP_MIN + NUM_LOOPS - 1;
+const uint8_t BYPASS_LOOP_MIN = 101;
+const uint8_t BYPASS_LOOP_MAX = BYPASS_LOOP_MIN + NUM_LOOPS - 1;
+const uint8_t ACTIVATE_SWITCH_MIN = ACTIVATE_LOOP_MIN + NUM_LOOPS;
+const uint8_t ACTIVATE_SWITCH_MAX = ACTIVATE_SWITCH_MIN + NUM_SWITCHES - 1;
+const uint8_t BYPASS_SWITCH_MIN = BYPASS_LOOP_MIN + NUM_LOOPS;
+const uint8_t BYPASS_SWITCH_MAX = BYPASS_SWITCH_MIN + NUM_SWITCHES - 1;
 
 struct Preset
 {
@@ -74,7 +74,7 @@ void loop()
     MIDI.read();
 }
 
-void handleProgramChange(byte channel, byte number)
+void handleProgramChange(uint8_t channel, uint8_t number)
 {
     if (channel == config.MIDI_CHANNEL)
     {
