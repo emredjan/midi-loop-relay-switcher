@@ -1,9 +1,5 @@
 //#include <SD.h>
-
 #include "SdFat.h"
-SdFat SD;
-
-#include <SPI.h>
 #include <MIDI.h>
 
 MIDI_CREATE_DEFAULT_INSTANCE();
@@ -32,6 +28,8 @@ const byte ACTIVATE_SWITCH_MIN = ACTIVATE_LOOP_MIN + NUM_LOOPS;
 const byte ACTIVATE_SWITCH_MAX = ACTIVATE_SWITCH_MIN + NUM_SWITCHES - 1;
 const byte BYPASS_SWITCH_MIN = BYPASS_LOOP_MIN + NUM_LOOPS;
 const byte BYPASS_SWITCH_MAX = BYPASS_SWITCH_MIN + NUM_SWITCHES - 1;
+
+SdFat SD;
 
 struct Preset
 {
