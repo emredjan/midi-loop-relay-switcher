@@ -21,6 +21,9 @@ const int CS_PIN = 10;
 const byte LOOP_PINS[NUM_LOOPS] = {2, 3, 4, 5, 6, 7};
 const byte SWITCH_PINS[NUM_SWITCHES] = {8, 9};
 
+const byte LED_OK_PIN = A0;
+const byte LED_ER_PIN = A1;
+
 const byte ACTIVATE_LOOP_MIN = 111;
 const byte ACTIVATE_LOOP_MAX = ACTIVATE_LOOP_MIN + NUM_LOOPS - 1;
 const byte BYPASS_LOOP_MIN = 101;
@@ -49,17 +52,22 @@ bool configLoaded = false;
 
 void setup()
 {
+
+    pinMode(LED_OK_PIN, OUTPUT);
+    pinMode(LED_ER_PIN, OUTPUT);
+
     if (!SD.begin(CS_PIN))
     {
         loadConfigFallback();
         configLoaded = false;
+        digitalWrite(LED_ER_PIN, HIGH);
     }
     else
     {
         loadConfiguration(filename);
         configLoaded = true;
+        digitalWrite(LED_OK_PIN, HIGH);
     }
-
 
     // Set loop & switch pins
     for (byte i = 0; i < NUM_LOOPS; i++)
@@ -206,7 +214,6 @@ void loadConfigFallback()
         config.switchTypes[i] = 0;
 
     // No presets available
-
 }
 
 void printConfig()
@@ -223,21 +230,28 @@ void printConfig()
         Serial.println(config.switchTypes[i]);
     }
 
-    Serial.println("Programs:");
-    for (byte i = 0; i < NUM_PRESETS; i++)
+    if (configLoaded)
     {
-        Serial.print("\tProgram #");
-        Serial.print(i + 1);
-        Serial.print(" | ");
+        Serial.println("Programs:");
+        for (byte i = 0; i < NUM_PRESETS; i++)
+        {
+            Serial.print("\tProgram #");
+            Serial.print(i + 1);
+            Serial.print(" | ");
 
-        Serial.print("Loops: ");
-        for (byte j = 0; j < NUM_LOOPS; j++)
-            Serial.print(presets[i].loops[j]);
-        Serial.print(" | ");
+            Serial.print("Loops: ");
+            for (byte j = 0; j < NUM_LOOPS; j++)
+                Serial.print(presets[i].loops[j]);
+            Serial.print(" | ");
 
-        Serial.print("Switches: ");
-        for (byte j = 0; j < NUM_SWITCHES; j++)
-            Serial.print(presets[i].switches[j]);
-        Serial.println("");
+            Serial.print("Switches: ");
+            for (byte j = 0; j < NUM_SWITCHES; j++)
+                Serial.print(presets[i].switches[j]);
+            Serial.println("");
+        }
+    }
+    else
+    {
+        Serial.println("SD Card failed, no presets available");
     }
 }
