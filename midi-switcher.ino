@@ -1,4 +1,8 @@
-#include <SD.h>
+//#include <SD.h>
+
+#include "SdFat.h"
+SdFat SD;
+
 #include <SPI.h>
 #include <MIDI.h>
 
