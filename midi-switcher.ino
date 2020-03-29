@@ -41,15 +41,21 @@ struct Config
 Preset presets[NUM_PRESETS];
 Config config;
 
+bool configLoaded = false;
+
 void setup()
 {
-    while (!SD.begin(CS_PIN))
+    if (!SD.begin(CS_PIN))
     {
-        Serial.println(F("Failed to initialize SD library"));
-        delay(1000);
+        loadConfigFallback();
+        configLoaded = false;
+    }
+    else
+    {
+        loadConfiguration(filename);
+        configLoaded = true;
     }
 
-    loadConfiguration(filename);
 
     // Set loop & switch pins
     for (byte i = 0; i < NUM_LOOPS; i++)
@@ -80,7 +86,7 @@ void handleProgramChange(byte channel, byte number)
     {
         if (number == 0)
             resetAll();
-        else if (number <= NUM_PRESETS)
+        else if ((number <= NUM_PRESETS) && configLoaded)
             loadPreset(number - 1);
         else if (
             (number >= ACTIVATE_LOOP_MIN && number <= ACTIVATE_LOOP_MAX) ||
@@ -183,6 +189,20 @@ void loadConfiguration(char *filename)
     }
 
     file.close();
+}
+
+void loadConfigFallback()
+{
+    // If fail to read to SD card, at least have minimal config
+
+    config.MIDI_CHANNEL = 16;
+
+    // Set all switches to momentary
+    for (byte i = 0; i < NUM_SWITCHES; i++)
+        config.switchTypes[i] = 0;
+
+    // No presets available
+
 }
 
 void printConfig()
