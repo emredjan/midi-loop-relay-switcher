@@ -4,7 +4,7 @@
 
 MIDI_CREATE_DEFAULT_INSTANCE();
 
-const char *filename = "/config.cfg";
+char *filename = "/config.cfg";
 
 const int NUM_LOOPS = 6;
 const int NUM_SWITCHES = 2;
