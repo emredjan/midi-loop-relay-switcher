@@ -1,5 +1,5 @@
 //#include <SD.h>
-#include "SdFat.h"
+#include <SdFat.h>
 #include <MIDI.h>
 
 MIDI_CREATE_DEFAULT_INSTANCE();
@@ -58,6 +58,7 @@ void setup()
     {
         loadConfigFallback();
         configLoaded = false;
+        digitalWrite(LED_OK_PIN, LOW);
         digitalWrite(LED_ER_PIN, HIGH);
     }
     else
@@ -65,6 +66,7 @@ void setup()
         loadConfiguration(filename);
         configLoaded = true;
         digitalWrite(LED_OK_PIN, HIGH);
+        digitalWrite(LED_ER_PIN, LOW);
     }
 
     // Set loop & switch pins
@@ -124,6 +126,9 @@ void loadPreset(byte presetNum)
 
     for (byte i = 0; i < NUM_SWITCHES; i++)
         setSwitch(SWITCH_PINS[i], config.switchTypes[i], presets[presetNum].switches[i]);
+
+    digitalWrite(LED_OK_PIN, LOW);
+    digitalWrite(LED_ER_PIN, LOW);
 }
 
 void setSwitch(byte switchPin, byte switchType, byte switchVal)
@@ -151,6 +156,17 @@ void resetAll()
 
     for (byte i = 0; i < NUM_SWITCHES; i++)
         setSwitch(SWITCH_PINS[i], config.switchTypes[i], 0);
+
+    if (configLoaded)
+    {
+        digitalWrite(LED_OK_PIN, HIGH);
+        digitalWrite(LED_ER_PIN, LOW);
+    }
+    else
+    {
+        digitalWrite(LED_OK_PIN, LOW);
+        digitalWrite(LED_ER_PIN, HIGH);
+    }
 }
 
 // Loads the configuration from a file
