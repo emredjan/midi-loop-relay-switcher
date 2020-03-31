@@ -230,6 +230,27 @@ void loadConfigFallback()
     // No presets available
 }
 
+void signalLed(byte status, unsigned long length)
+{
+    unsigned long currentMillis = millis();
+    unsigned long previousMillis = 0;
+
+    digitalWrite(LED_OK_PIN, LOW);
+    digitalWrite(LED_ER_PIN, LOW);
+
+    while (currentMillis - previousMillis >= length)
+    {
+        previousMillis = currentMillis;
+        if (status == 1)
+            digitalWrite(LED_OK_PIN, HIGH);
+        else
+            digitalWrite(LED_ER_PIN, HIGH);
+    }
+
+    digitalWrite(LED_OK_PIN, LOW);
+    digitalWrite(LED_ER_PIN, LOW);
+}
+
 void printConfig()
 {
     Serial.print("MIDI Channel#: ");
