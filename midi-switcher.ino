@@ -58,15 +58,13 @@ void setup()
     {
         loadConfigFallback();
         configLoaded = false;
-        digitalWrite(LED_OK_PIN, LOW);
-        digitalWrite(LED_ER_PIN, HIGH);
+        statusLed(0, 1000);
     }
     else
     {
         loadConfiguration(filename);
         configLoaded = true;
-        digitalWrite(LED_OK_PIN, HIGH);
-        digitalWrite(LED_ER_PIN, LOW);
+        statusLed(1, 1000);
     }
 
     // Set loop & switch pins
@@ -126,9 +124,6 @@ void loadPreset(byte presetNum)
 
     for (byte i = 0; i < NUM_SWITCHES; i++)
         setSwitch(SWITCH_PINS[i], config.switchTypes[i], presets[presetNum].switches[i]);
-
-    digitalWrite(LED_OK_PIN, LOW);
-    digitalWrite(LED_ER_PIN, LOW);
 }
 
 void setSwitch(byte switchPin, byte switchType, byte switchVal)
@@ -158,15 +153,9 @@ void resetAll()
         setSwitch(SWITCH_PINS[i], config.switchTypes[i], 0);
 
     if (configLoaded)
-    {
-        digitalWrite(LED_OK_PIN, HIGH);
-        digitalWrite(LED_ER_PIN, LOW);
-    }
+        statusLed(1, 1000);
     else
-    {
-        digitalWrite(LED_OK_PIN, LOW);
-        digitalWrite(LED_ER_PIN, HIGH);
-    }
+        statusLed(0, 1000);
 }
 
 // Loads the configuration from a file
@@ -230,22 +219,17 @@ void loadConfigFallback()
     // No presets available
 }
 
-void signalLed(byte status, unsigned long length)
+void statusLed(byte status, unsigned long length)
 {
-    unsigned long currentMillis = millis();
-    unsigned long previousMillis = 0;
-
     digitalWrite(LED_OK_PIN, LOW);
     digitalWrite(LED_ER_PIN, LOW);
 
-    while (currentMillis - previousMillis >= length)
-    {
-        previousMillis = currentMillis;
-        if (status == 1)
-            digitalWrite(LED_OK_PIN, HIGH);
-        else
-            digitalWrite(LED_ER_PIN, HIGH);
-    }
+    if (status == 1)
+        digitalWrite(LED_OK_PIN, HIGH);
+    else
+        digitalWrite(LED_ER_PIN, HIGH);
+
+    delay(length);
 
     digitalWrite(LED_OK_PIN, LOW);
     digitalWrite(LED_ER_PIN, LOW);
